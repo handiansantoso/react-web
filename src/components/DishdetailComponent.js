@@ -3,6 +3,7 @@ import { Card, CardImg, CardText, CardBody,
     CardTitle, Breadcrumb, BreadcrumbItem, Button, Modal, ModalHeader, ModalBody, Label } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import { Control, LocalForm, Errors } from 'react-redux-form';
+import { Loading } from './LoadingComponent';
 
 const required = (val) => val && val.length;
 const maxLength = (len) => (val) => !(val) || val.length <= len;
@@ -84,7 +85,7 @@ class CommentForm extends Component {
     }
 }
     
-function RenderDish({dish}) { 
+function RenderDish({props, dish}) { 
         if(dish != null){
             return(                
                 <Card className="col-12 col-md-5 m-1">
@@ -131,6 +132,27 @@ function RenderDish({dish}) {
         }
     }
     const  DishDetail = (props) => {
+        if (props.isLoading) {
+            return(
+                <div className="container">
+                    <div className="row">            
+                        <Loading />
+                    </div>
+                </div>
+            );
+        }
+        else if (props.errMess) {
+            return(
+                <div className="container">
+                    <div className="row"> 
+                        <div className="col-12">
+                            <h4>{props.dishes.errMess}</h4>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+        else
         if(props.dish == null)
             return (<div></div>);
             return (
@@ -147,7 +169,7 @@ function RenderDish({dish}) {
                     </div>                
                 </div>
                 <div className="row">
-                    <RenderDish dish={props.dish} />
+                    <RenderDish props={props} dish={props.dish} />
                     <RenderComments comments={props.comments} addComment={props.addComment} dishId={props.dish.id} />
                     
                     
